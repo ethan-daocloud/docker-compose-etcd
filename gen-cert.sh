@@ -34,6 +34,7 @@ cat > ca-config.json << EOF
                 "usages": [
                     "signing",
                     "key encipherment",
+                    "server auth",
                     "client auth"
                 ]
             }
@@ -151,3 +152,79 @@ cat > client.json << EOF
 
 EOF
 cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client
+
+cd etcd0
+
+cat > peer.json << EOF
+{
+    "CN": "etcd0",
+    "hosts": [
+        "127.0.0.1",
+        "localhost",
+        "10.5.0.10",
+        "etcd0",
+        "host-etcd0"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "O": "jizhi"
+        }
+    ]
+}
+EOF
+cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=peer peer.json | cfssljson -bare peer
+
+cd ../etcd1
+
+cat > peer.json << EOF
+{
+    "CN": "etcd1",
+    "hosts": [
+        "127.0.0.1",
+        "localhost",
+        "10.5.0.20",
+        "etcd1",
+        "host-etcd1"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "O": "jizhi"
+        }
+    ]
+}
+EOF
+cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=peer peer.json | cfssljson -bare peer
+
+cd ../etcd2
+
+cat > peer.json << EOF
+{
+    "CN": "etcd2",
+    "hosts": [
+        "127.0.0.1",
+        "localhost",
+        "10.5.0.30",
+        "etcd2",
+        "host-etcd2"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "O": "jizhi"
+        }
+    ]
+}
+EOF
+cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=peer peer.json | cfssljson -bare peer
+

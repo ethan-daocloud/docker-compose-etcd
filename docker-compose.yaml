@@ -19,11 +19,11 @@ services:
       - -listen-client-urls
       - https://0.0.0.0:2379
       - -initial-advertise-peer-urls
-      - http://etcd0:2380
+      - https://etcd0:2380
       - -listen-peer-urls
-      - http://0.0.0.0:2380
+      - https://0.0.0.0:2380
       - -initial-cluster
-      - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+      - etcd0=https://etcd0:2380,etcd1=https://etcd1:2380,etcd2=https://etcd2:2380
       - --cert-file
       - /certfile/etcd0/server.pem
       - --key-file
@@ -31,6 +31,13 @@ services:
       - --client-cert-auth
       - --trusted-ca-file
       - /certfile/ca.pem
+      - --peer-client-cert-auth
+      - --peer-trusted-ca-file
+      - /certfile/ca.pem
+      - --peer-cert-file
+      - /certfile/etcd0/peer.pem
+      - --peer-key-file
+      - /certfile/etcd0/peer-key.pem
     networks:
       vpcbr:
         ipv4_address: 10.5.0.10
@@ -54,11 +61,11 @@ services:
       - -listen-client-urls
       - https://0.0.0.0:2379
       - -initial-advertise-peer-urls
-      - http://etcd1:2380
+      - https://etcd1:2380
       - -listen-peer-urls
-      - http://0.0.0.0:2380
+      - https://0.0.0.0:2380
       - -initial-cluster
-      - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+      - etcd0=https://etcd0:2380,etcd1=https://etcd1:2380,etcd2=https://etcd2:2380
       - --cert-file
       - /certfile/etcd1/server.pem
       - --key-file
@@ -66,6 +73,13 @@ services:
       - --client-cert-auth
       - --trusted-ca-file
       - /certfile/ca.pem
+      - --peer-client-cert-auth
+      - --peer-trusted-ca-file
+      - /certfile/ca.pem
+      - --peer-cert-file
+      - /certfile/etcd1/peer.pem
+      - --peer-key-file
+      - /certfile/etcd1/peer-key.pem
     networks:
       vpcbr:
         ipv4_address: 10.5.0.20
@@ -89,11 +103,11 @@ services:
       - -listen-client-urls
       - https://0.0.0.0:2379
       - -initial-advertise-peer-urls
-      - http://etcd2:2380
+      - https://etcd2:2380
       - -listen-peer-urls
-      - http://0.0.0.0:2380
+      - https://0.0.0.0:2380
       - -initial-cluster
-      - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+      - etcd0=https://etcd0:2380,etcd1=https://etcd1:2380,etcd2=https://etcd2:2380
       - --cert-file
       - /certfile/etcd2/server.pem
       - --key-file
@@ -101,6 +115,13 @@ services:
       - --client-cert-auth
       - --trusted-ca-file
       - /certfile/ca.pem
+      - --peer-client-cert-auth
+      - --peer-trusted-ca-file
+      - /certfile/ca.pem
+      - --peer-cert-file
+      - /certfile/etcd2/peer.pem
+      - --peer-key-file
+      - /certfile/etcd2/peer-key.pem
     networks:
       vpcbr:
         ipv4_address: 10.5.0.30
