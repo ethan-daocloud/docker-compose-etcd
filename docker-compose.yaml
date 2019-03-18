@@ -2,6 +2,7 @@ version: '2'
 services:
   etcd0:
     image: quay.io/coreos/etcd:v3.3.12
+    hostname: host-etcd0
     ports:
       - 2379
     volumes:
@@ -22,8 +23,13 @@ services:
       - http://0.0.0.0:2380
       - -initial-cluster
       - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.10
+
   etcd1:
     image: quay.io/coreos/etcd:v3.3.12
+    hostname: host-etcd1
     ports:
       - 2379
     volumes:
@@ -44,8 +50,13 @@ services:
       - http://0.0.0.0:2380
       - -initial-cluster
       - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.20
+
   etcd2:
     image: quay.io/coreos/etcd:v3.3.12
+    hostname: host-etcd2
     ports:
       - 2379
     volumes:
@@ -66,17 +77,29 @@ services:
       - http://0.0.0.0:2380
       - -initial-cluster
       - etcd0=http://etcd0:2380,etcd1=http://etcd1:2380,etcd2=http://etcd2:2380
-  etcd-browser:
-    build: ./etcd-browser
-    ports:
-      - 8000
-    environment:
-      ETCD_HOST: etcd0
-      ETCD_PORT: 2379
-    depends_on:
-      - etcd0
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.30
+
+  etcd-visitor:
+    image: centos:centos7.5.1804
+    hostname: host-etcd-visitor
+    command:
+      - sleep
+      - "10000"
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.5
 
 volumes:
   etcd0:
   etcd1:
   etcd2:
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
