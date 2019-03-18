@@ -6,7 +6,7 @@ mkdir certfile
 cd certfile
 mkdir etcd0 etcd1 etcd2
 
-cat > ca-config.json << EOF1
+cat > ca-config.json << EOF
 {
     "signing": {
         "default": {
@@ -40,9 +40,9 @@ cat > ca-config.json << EOF1
         }
     }
 }
-EOF1
+EOF
 
-cat > ca-csr.json << EOF2
+cat > ca-csr.json << EOF
 {
     "CN": "etcd-cluster",
     "key": {
@@ -55,13 +55,13 @@ cat > ca-csr.json << EOF2
         }
     ]
 }
-EOF2
+EOF
 
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
 
 cd etcd0
 
-cat > server.json << EOF2
+cat > server.json << EOF
 {
     "CN": "etcd0",
     "hosts": [
@@ -81,11 +81,11 @@ cat > server.json << EOF2
         }
     ]
 }
-EOF2
+EOF
 cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=server server.json | cfssljson -bare server
 
 cd ../etcd1/
-cat > server.json << EOF2
+cat > server.json << EOF
 {
     "CN": "etcd1",
     "hosts": [
@@ -105,10 +105,10 @@ cat > server.json << EOF2
         }
     ]
 }
-EOF2
+EOF
 cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=server server.json | cfssljson -bare server
 cd ../etcd2/
-cat > server.json << EOF2
+cat > server.json << EOF
 {
     "CN": "etcd2",
     "hosts": [
@@ -128,6 +128,26 @@ cat > server.json << EOF2
         }
     ]
 }
-EOF2
+EOF
 cfssl gencert -ca=../ca.pem -ca-key=../ca-key.pem -config=../ca-config.json -profile=server server.json | cfssljson -bare server
 
+cd ..
+cat > client.json << EOF
+{
+    "CN": "etcd-client",
+    "hosts": [
+        ""
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "O": "jizhi"
+        }
+    ]
+}
+
+EOF
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client
